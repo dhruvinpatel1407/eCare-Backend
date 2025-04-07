@@ -1,0 +1,10 @@
+# Ignore environment variables
+.env
+
+# Ignore node_modules folder
+node_modules/
+dist/
+build/
+
+# Ignore sensitive credentials
+Server/src/config/credentials.json
