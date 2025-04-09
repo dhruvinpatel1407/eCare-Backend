@@ -94,7 +94,7 @@ const AppointmentBooking = async (req, res) => {
             user: req.user.userId,
             physician: physicianId,
             bookedTime: selectedTime,
-            status : "booked"
+            status: { $in: ["booked", "rescheduled"] }
         });
 
         if (existingAppointment) {
@@ -132,7 +132,7 @@ const UpdateAppointmentStatus = async (req, res) => {
                 user: existingAppointment.user,
                 physician: existingAppointment.physician,
                 bookedTime: newTime,
-                status : "booked"
+                status: { $in: ["booked", "rescheduled"] }
             });
 
             if (slotAvailable) {

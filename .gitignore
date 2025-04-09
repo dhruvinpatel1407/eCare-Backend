@@ -5,6 +5,7 @@
 node_modules/
 dist/
 build/
+uploads/
 
 # Ignore sensitive credentials
 Server/src/config/credentials.json

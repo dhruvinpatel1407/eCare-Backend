@@ -1,5 +1,5 @@
 // src/controllers/pdfController.js
-const PDFCollection = require("../models/ReportModel");
+const PDFCollection = require("../models/reportModel");
 const fs = require("fs"); // Add this at the top
 
 const uploadPdf = async (req, res) => {
