@@ -42,7 +42,7 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/demographics", demographicRoutes);
 app.use("/api/pdf", pdfRoutes);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
   console.log(chalk.yellow.bold(`Server is running on port ${PORT}`));
