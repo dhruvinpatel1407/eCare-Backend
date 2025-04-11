@@ -20,27 +20,51 @@ const swaggerOptions = {
         User: {
           type: "object",
           properties: {
-            id: {
+            _id: {
               type: "string",
-              description: "User ID",
+              description: "Physician ID"
+            },
+            firebaseUid: {
+              type: "string",
+              description: "Firebase User ID",
+              unique: true,
+              required: true
             },
             userName: {
               type: "string",
               description: "Username chosen by the user",
+              required: true
             },
             email: {
               type: "string",
               format: "email",
               description: "User's email address",
+              required: true
             },
             mobileNumber: {
               type: "string",
               format: "phone",
               description: "User's 10-digit Indian mobile number (optional)",
+              required: false
             },
+            passWord: {
+              type: "string",
+              description: "User password",
+              required: true
+            },
+            createdAt: {
+              type: "string",
+              format: "date-time",
+              description: "When user was created"
+            },
+            demographics: {
+              type: "string",
+              format: "objectId",
+              description: "Reference to user's demographic information"
+            }
           },
-          required: ["userName", "email"],
-          type: "object",
+          required: ["firebaseUid", "userName", "email", "passWord"],
+          type: "object"
         },
         Physician: {
           type: "object",
@@ -53,23 +77,15 @@ const swaggerOptions = {
               type: "string",
               description: "Physician's full name"
             },
-            specialty: {
+            speciality: {
               type: "string",
               description: "Physician's medical specialty"
-            },
-            contactNumber: {
-              type: "string",
-              description: "Physician's contact number"
             },
             clinics: {
               type: "array",
               items: {
                 type: "object",
                 properties: {
-                  _id: {
-                    type: "string",
-                    description: "Clinic ID"
-                  },
                   clinicName: {
                     type: "string",
                     description: "Name of the clinic"
@@ -77,13 +93,58 @@ const swaggerOptions = {
                   address: {
                     type: "string",
                     description: "Clinic address"
+                  },
+                  city: {
+                    type: "string",
+                    description: "City where the clinic is located"
+                  },
+                  workingDays: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        day: {
+                          type: "string",
+                          enum: [
+                            "Monday",
+                            "Tuesday",
+                            "Wednesday",
+                            "Thursday",
+                            "Friday",
+                            "Saturday",
+                            "Sunday"
+                          ],
+                          description: "Day of the week"
+                        },
+                        startTime: {
+                          type: "string",
+                          format: "date-time",
+                          description: "Start time of working hours"
+                        },
+                        endTime: {
+                          type: "string",
+                          format: "date-time",
+                          description: "End time of working hours"
+                        }
+                      },
+                      required: ["day", "startTime", "endTime"]
+                    }
                   }
-                }
+                },
+                required: ["clinicName", "address", "city", "workingDays"]
               },
-              description: "List of clinics where physician is available"
+              description: "List of clinics where physician is available with their working days"
+            },
+            contactNumber: {
+              type: "string",
+              description: "Physician's contact number"
+            },
+            email: {
+              type: "string",
+              description: "Physician's email address"
             }
           },
-          required: ["name", "specialty", "contactNumber", "clinics"],
+          required: ["name", "speciality", "clinics", "contactNumber", "email"],
           type: "object"
         },
         Appointment: {
@@ -101,10 +162,6 @@ const swaggerOptions = {
               type: "string",
               description: "Physician ID"
             },
-            clinic: {
-              type: "string",
-              description: "Clinic ID where appointment is booked"
-            },
             bookedTime: {
               type: "string",
               format: "date-time",
@@ -114,11 +171,6 @@ const swaggerOptions = {
               type: "string",
               enum: ["booked", "completed", "cancelled"],
               description: "Status of the appointment"
-            },
-            createdAt: {
-              type: "string",
-              format: "date-time",
-              description: "When appointment was created"
             }
           },
           required: ["user", "physician", "clinic", "bookedTime"],
@@ -127,6 +179,10 @@ const swaggerOptions = {
         Service: {
           type: "object",
           properties: {
+            _id: {
+              type: "string",
+              description: "Appointment ID"
+            },
             name: {
               type: "string",
               description: "Name of the service",
@@ -213,10 +269,15 @@ const swaggerOptions = {
               type: "string",
               description: "Occupation of the user"
             },
-            formattedDateOfBirth: {
+            profilePicture : {
               type: "string",
-              format: "date-time",
-              description: "Formatted date of birth in dd/mm/yyyy"
+              format: "base64",
+              description: "Base64 encoded profile picture (max size: 1MB)",
+            },
+            profilePictureType: {
+              type: "string",
+              enum: ["JPG", "JPEG"],
+              description: "Type of the profile picture",
             },
             userDetails: {
               type: "object",
@@ -230,7 +291,45 @@ const swaggerOptions = {
           },
           required: ["userId", "dateOfBirth", "gender", "bloodGroup", "height", "weight", "address", "maritalStatus", "occupation"],
           type: "object"
-        }
+        },
+        ReportModel: {
+          type: "object",
+          properties: {
+            _id: {
+              type: "string",
+              description: "Physician ID"
+            },
+            filename: {
+              type: "string",
+              description: "Name of the report file",
+              required: true
+            },
+            contentType: {
+              type: "string",
+              description: "MIME type of the report file",
+              required: true
+            },
+            data: {
+              type: "string",
+              format: "binary",
+              description: "Report file data in base64 format",
+              required: true
+            },
+            userId: {
+              type: "string",
+              format: "objectId",
+              description: "Reference to the user who owns this report",
+              required: true
+            },
+            createdAt: {
+              type: "string",
+              format: "date-time",
+              description: "When the report was created"
+            }
+          },
+          required: ["filename", "contentType", "data", "userId"],
+          type: "object"
+        },
       },
       securitySchemes: {
         bearerAuth: {

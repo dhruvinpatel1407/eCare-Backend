@@ -2,6 +2,48 @@
 const PDFCollection = require("../models/reportModel");
 const fs = require("fs"); // Add this at the top
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     PDF:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: Unique identifier for the PDF document
+ *         filename:
+ *           type: string
+ *           description: Name of the uploaded PDF file
+ *         contentType:
+ *           type: string
+ *           description: MIME type of the PDF (e.g., application/pdf)
+ *         data:
+ *           type: string
+ *           format: binary
+ *           description: Binary content of the PDF file
+ *         userId:
+ *           type: string
+ *           description: Reference to the user who uploaded the PDF
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: Upload timestamp
+ *       required:
+ *         - filename
+ *         - contentType
+ *         - data
+ *         - userId
+ *       example:
+ *         _id: "6428ab2c6d3d2f2a1c9e5a12"
+ *         filename: "report.pdf"
+ *         contentType: "application/pdf"
+ *         data: "<binary data>"
+ *         userId: "6128ab2c6d3d2f2a1c9e5b33"
+ *         createdAt: "2025-04-10T12:34:56.789Z"
+ */
+
+
 const uploadPdf = async (req, res) => {
   try {
     const file = req.file;

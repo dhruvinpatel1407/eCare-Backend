@@ -8,31 +8,6 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 router.use(verifyToken);
-
-// Add this configuration for file upload
-// const upload = multer({
-//     dest: "./uploads/", // You can specify an upload directory
-//     limits: {
-//       fileSize: 5 * 1024 * 1024, // 1MB file size limit
-//     },
-//     fileFilter(req, file, cb) {
-//       const allowedTypes = [
-//         "image/png",
-//         "image/jpg",
-//         "image/jpeg",
-//         "image/gif",
-//       ];
-//       cb(null, allowedTypes.includes(file.mimetype));
-//     },
-//   });
-
-//   // Define the fields you want to accept
-// const uploadFields = upload.fields([
-//   { 
-//     name: "profilePicture", // Name of the field in your form
-//     maxCount: 1           // Maximum number of files for this field
-//   }
-// ]);
  
 
 const uploadsDir = path.join(__dirname, "../../uploads");

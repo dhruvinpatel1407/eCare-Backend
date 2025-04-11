@@ -13,18 +13,18 @@ const validator = require("../utils/utils")
  *       properties:
  *         _id:
  *           type: string
- *           description: Demographic ID
+ *           description: Unique ID for the demographic document
  *         userId:
  *           type: string
- *           description: User ID associated with the demographic information
+ *           description: ObjectId of the user associated with this demographic
  *         dateOfBirth:
  *           type: string
- *           format: date-time
+ *           format: date
  *           example: "1990-01-01"
- *           description: Date of birth of the user
+ *           description: Date of birth in YYYY-MM-DD format
  *         gender:
  *           type: string
- *           enum: ["male", "female", "other", "prefer_not_to_say"]
+ *           enum: ["Male", "Female", "Other", "Prefer not to say"]
  *           description: Gender of the user
  *         bloodGroup:
  *           type: string
@@ -32,9 +32,11 @@ const validator = require("../utils/utils")
  *           description: Blood group of the user
  *         height:
  *           type: number
+ *           example: 175
  *           description: Height in centimeters
  *         weight:
  *           type: number
+ *           example: 70
  *           description: Weight in kilograms
  *         address:
  *           type: object
@@ -42,27 +44,40 @@ const validator = require("../utils/utils")
  *             street:
  *               type: string
  *               example: "123 Main Street"
+ *               description: Street address
  *             city:
  *               type: string
  *               example: "New York"
+ *               description: City name
  *             state:
  *               type: string
  *               example: "NY"
+ *               description: State name or abbreviation
  *             zipCode:
  *               type: string
- *               match: ^\d{6}$
- *               example: "10001"
+ *               pattern: "^[0-9]{6}$"
+ *               example: "100001"
+ *               description: 6-digit ZIP/postal code
  *         maritalStatus:
  *           type: string
  *           enum: ["Single", "Married", "Divorced", "Widowed"]
  *           description: Marital status of the user
  *         occupation:
  *           type: string
- *           description: Occupation of the user
+ *           example: "Software Engineer"
+ *           description: Occupation or profession of the user
+ *         profilePicture:
+ *           type: string
+ *           format: binary
+ *           description: Base64-encoded image data (optional, max 1MB)
+ *         profilePictureType:
+ *           type: string
+ *           enum: ["image/png", "image/jpg", "image/jpeg", "image/gif"]
+ *           description: MIME type of the uploaded profile picture
  *         createdAt:
  *           type: string
  *           format: date-time
- *           description: When the demographic information was created
+ *           description: Timestamp of when the demographic entry was created
  *       required:
  *         - userId
  *         - dateOfBirth
@@ -70,17 +85,14 @@ const validator = require("../utils/utils")
  *         - bloodGroup
  *         - height
  *         - weight
- *         - address.street
- *         - address.city
- *         - address.state
- *         - address.zipCode
+ *         - address
  *         - maritalStatus
  *         - occupation
  *       example:
- *         _id: "12345"
- *         userId: "67890"
+ *         _id: "6616d92d67c4bc001234abcd"
+ *         userId: "660fcb6f1234567890abcde1"
  *         dateOfBirth: "1990-01-01"
- *         gender: "male"
+ *         gender: "Male"
  *         bloodGroup: "A+"
  *         height: 175
  *         weight: 70
@@ -88,11 +100,14 @@ const validator = require("../utils/utils")
  *           street: "123 Main Street"
  *           city: "New York"
  *           state: "NY"
- *           zipCode: "10001"
+ *           zipCode: "100001"
  *         maritalStatus: "Single"
  *         occupation: "Software Engineer"
- *         createdAt: "2023-12-15T08:30:00"
+ *         createdAt: "2023-12-15T08:30:00.000Z"
+ *         profilePicture: "base64string..."
+ *         profilePictureType: "image/png"
  */
+
 
 
 getDemographics = async (req, res) => {

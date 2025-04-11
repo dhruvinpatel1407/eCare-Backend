@@ -34,7 +34,6 @@ const userSchema = new mongoose.Schema({
   mobileNumber: {
     type: String,
     required: false,
-    unique: true,
     validate:{
       validator: function (value) {
         // Allow empty or undefined values if optional

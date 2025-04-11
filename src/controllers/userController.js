@@ -161,7 +161,7 @@ const firebaseLogin = async (req, res) => {
         userName: displayName,
         email,
         passWord: uid, // Store Firebase UID as password
-        mobileNumber: ''
+        // mobileNumber: ''
       });
       
       const savedUser = await newUser.save();
