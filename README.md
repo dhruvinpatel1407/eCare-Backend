@@ -106,7 +106,8 @@ npm start
 ## 📘 API Documentation
 View complete API docs via Swagger:
 ```
-http://localhost:5000/api-docs
+https://ecare-erkn.onrender.com/api-docs
+
 ```
 
 ---
