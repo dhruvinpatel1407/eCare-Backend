@@ -63,8 +63,10 @@ touch .env
 PORT=5000
 MONGODB_URI=your_mongodb_uri
 JWT_SECRET=your_secret_key
-FIREBASE_CONFIG=your_firebase_config
-NODE_ENV=development
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_CLIENT_EMAIL=your_client_email
+FIREBASE_PRIVATE_KEY=your_private_key
+BACKEND_URL=your_backend_url
 ```
 
 ---
@@ -117,17 +119,18 @@ https://ecare-erkn.onrender.com/api-docs
 ### 👤 Users
 - `POST /api/users/register`
 - `POST /api/users/login`
-- `GET /api/users/profile`
-- `PUT /api/users/profile`
+- `POST /api/users/firebase-signin`
+- `GET /api/users/me`
+- `PUT /api/users/:id`
 - `DELETE /api/users/:id`
 
 ### 🩺 Physicians
-- `GET /api/physicians`
+- `GET /api/physicians/all`
 - `GET /api/physicians/:id`
 
 ### 📅 Appointments
-- `GET /api/appointments`
-- `GET /api/appointments/:id`
+- `GET /api/appointments/physician/:id`
+- `GET /api/appointments/all`
 - `POST /api/appointments`
 - `PUT /api/appointments/:id`
 
@@ -140,8 +143,8 @@ https://ecare-erkn.onrender.com/api-docs
 - `PUT /api/demographics/:id`
 
 ### 📄 PDF Generation
-- `POST /api/pdf/generate`
-- `GET /api/pdf/:id`
+- `POST /api/pdf/`
+- `GET /api/pdf/:filename`
 
 ---
 
@@ -150,13 +153,12 @@ https://ecare-erkn.onrender.com/api-docs
 - Password Hashing with Bcrypt
 - Secure Headers & CORS Setup
 - Firebase Authentication
-- XSS Protection & Rate Limiting
 - Input Sanitization & Validation
 
 ---
 
 ## 🧪 Testing
-- Use Postman or Thunder Client
+- Use Postman or Swagger
 
 ---
 
