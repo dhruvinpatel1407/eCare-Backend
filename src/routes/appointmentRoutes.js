@@ -26,29 +26,27 @@ router.use(verifyToken);
  *           schema:
  *             type: object
  *             required:
+ *               - user
  *               - physicianId
- *               - date
- *               - time
- *               - reason
+ *               - bookedTime
+ *               - status
  *             properties:
+ *               user:
+ *                 type: string
+ *                 description: The ID of the user (MongoDB ID)
+ *                 example: "67f8ab60d192a3c97f5f03a4"
  *               physicianId:
  *                 type: string
  *                 description: The ID of the physician (MongoDB ID)
- *                 example: "612ec0f85a4fbd0015cc9c5d"
- *               date:
+ *                 example: "67e428193a1311546acb4d45"
+ *               selectedTime:
  *                 type: string
- *                 format: date
- *                 description: The appointment date in YYYY-MM-DD format
- *                 example: "2023-09-20"
- *               time:
+ *                 description: Date and time of the appointment (DD/MM/YYYY HH:mm AM/PM format)
+ *                 example: "16/04/2025 10:00 AM"
+ *               status:
  *                 type: string
- *                 format: time
- *                 description: The appointment time in HH:mm format
- *                 example: "10:00"
- *               reason:
- *                 type: string
- *                 description: The reason for the appointment
- *                 example: "Regular checkup"
+ *                 description: Status of the appointment
+ *                 example: "booked"
  *     responses:
  *       201:
  *         description: Appointment created successfully
@@ -77,17 +75,18 @@ router.use(verifyToken);
  *                   type: string
  *                   description: Error message
  * @route POST /api/appointments
- * @description Create a new appointment with patient and physician details
+ * @description Create a new appointment with user and physician details
  * @auth Required
  * @body {Object} appointmentData - Appointment details
+ * @param {string} appointmentData.user - User's MongoDB ID
  * @param {string} appointmentData.physicianId - Physician's MongoDB ID
- * @param {string} appointmentData.date - Appointment date (YYYY-MM-DD)
- * @param {string} appointmentData.time - Appointment time (HH:mm)
- * @param {string} appointmentData.reason - Reason for appointment
+ * @param {string} appointmentData.selectedTime - Appointment date and time (e.g. 16/04/2025 10:00 AM)
+ * @param {string} appointmentData.status - Status of the appointment
  * @returns {Object} 201: Created appointment
  * @returns {Object} 400: Invalid request
  * @returns {Object} 500: Server error
  */
+
 router.post("/", AppointmentBooking);
 
 // Get all appointments for a specific user
@@ -195,7 +194,7 @@ router.get("/physician/:physicianId", PhysicianAppointments);
  * /api/appointments/{appointmentId}:
  *   put:
  *     tags: [Appointments Controller]
- *     summary: Update appointment status
+ *     summary: Update appointment status (cancel or reschedule)
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -216,9 +215,13 @@ router.get("/physician/:physicianId", PhysicianAppointments);
  *             properties:
  *               status:
  *                 type: string
- *                 enum: [ "pending", "confirmed", "cancelled" ]
- *                 description: The new status of the appointment
- *                 example: "confirmed"
+ *                 enum: [booked, cancelled, rescheduled]
+ *                 description: New status of the appointment
+ *                 example: "rescheduled"
+ *               newTime:
+ *                 type: string
+ *                 description: New appointment time (only required if status is "rescheduled")
+ *                 example: "17/04/2025 5:00 PM"
  *     responses:
  *       200:
  *         description: Appointment updated successfully
@@ -226,8 +229,8 @@ router.get("/physician/:physicianId", PhysicianAppointments);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Appointment'
- *       404:
- *         description: Appointment not found
+ *       400:
+ *         description: Invalid request data
  *         content:
  *           application/json:
  *             schema:
@@ -236,8 +239,8 @@ router.get("/physician/:physicianId", PhysicianAppointments);
  *                 error:
  *                   type: string
  *                   description: Error message
- *       400:
- *         description: Invalid status
+ *       404:
+ *         description: Appointment not found
  *         content:
  *           application/json:
  *             schema:
@@ -257,16 +260,18 @@ router.get("/physician/:physicianId", PhysicianAppointments);
  *                   type: string
  *                   description: Error message
  * @route PUT /api/appointments/{appointmentId}
- * @description Update the status of an appointment
+ * @description Update the status of an appointment (cancel or reschedule). If rescheduling, provide the new time.
  * @auth Required
  * @param {string} appointmentId - MongoDB ID of the appointment
- * @body {Object} Update data
- * @param {string} body.status - New status of appointment (pending, confirmed, cancelled)
+ * @body {Object} updateData - The update payload
+ * @param {string} updateData.status - New status (cancelled or rescheduled)
+ * @param {string} [updateData.newTime] - New appointment time (required when status is rescheduled)
  * @returns {Object} 200: Updated appointment details
+ * @returns {Object} 400: Invalid request
  * @returns {Object} 404: Appointment not found
- * @returns {Object} 400: Invalid status
  * @returns {Object} 500: Server error
  */
+
 router.put("/:appointmentId", UpdateAppointmentStatus);
 
 module.exports = router;

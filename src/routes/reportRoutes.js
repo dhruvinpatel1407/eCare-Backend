@@ -12,11 +12,20 @@ router.use(verifyToken)
  * @swagger
  * /api/pdf:
  *   post:
- *     tags : [PDF Controller]
+ *     tags: [PDF Controller]
  *     summary: Upload a PDF file
- *     description: Uploads a PDF file to the server
- *     consumes:
- *       - multipart/form-data
+ *     description: Uploads a PDF file to the server.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               pdf:
+ *                 type: string
+ *                 format: binary
+ *                 description: PDF file to upload
  *     responses:
  *       200:
  *         description: PDF uploaded successfully
@@ -27,10 +36,8 @@ router.use(verifyToken)
  *               properties:
  *                 message:
  *                   type: string
- *                   description: Success message
  *                 filename:
  *                   type: string
- *                   description: Name of the uploaded file
  *       500:
  *         description: Error uploading PDF
  *         content:
@@ -40,45 +47,31 @@ router.use(verifyToken)
  *               properties:
  *                 message:
  *                   type: string
- *                   description: Error message
  */
 
 router.post("/", upload.single('pdf'), uploadPdf);
 
 /**
  * @swagger
- * /api/pdf/{filename}:
+ * /api/pdf:
  *   get:
- *     tags : [PDF Controller]
- *     summary: Download a PDF file
- *     description: Downloads a PDF file by filename
- *     parameters:
- *       - in: path
- *         name: filename
- *         schema:
- *           type: string
- *         required: true
- *         description: Name of the PDF file to download
+ *     tags: [PDF Controller]
+ *     summary: Get list or metadata of PDFs
+ *     description: Retrieves information about available or uploaded PDF files.
  *     responses:
  *       200:
- *         description: PDF downloaded successfully
- *         content:
- *           application/pdf:
- *             schema:
- *               type: string
- *               format: binary
- *       404:
- *         description: PDF not found
+ *         description: PDF metadata retrieved successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Error message
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   filename:
+ *                     type: string
  *       500:
- *         description: Error downloading PDF
+ *         description: Error retrieving PDF data
  *         content:
  *           application/json:
  *             schema:
@@ -86,7 +79,6 @@ router.post("/", upload.single('pdf'), uploadPdf);
  *               properties:
  *                 message:
  *                   type: string
- *                   description: Error message
  */
 router.get("/", getPdf);
 
@@ -94,15 +86,15 @@ router.get("/", getPdf);
  * @swagger
  * /api/pdf/{filename}:
  *   get:
- *     tags : [PDF Controller]
+ *     tags: [PDF Controller]
  *     summary: Download a PDF file
  *     description: Downloads a PDF file by filename
  *     parameters:
  *       - in: path
  *         name: filename
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
  *         description: Name of the PDF file to download
  *     responses:
  *       200:
@@ -121,7 +113,6 @@ router.get("/", getPdf);
  *               properties:
  *                 message:
  *                   type: string
- *                   description: Error message
  *       500:
  *         description: Error downloading PDF
  *         content:
@@ -131,7 +122,6 @@ router.get("/", getPdf);
  *               properties:
  *                 message:
  *                   type: string
- *                   description: Error message
  */
 router.get("/:filename", downloadPdf);
 
