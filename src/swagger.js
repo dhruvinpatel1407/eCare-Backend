@@ -206,7 +206,7 @@ const swaggerOptions = {
           required: ["name", "description", "price"],
           type: "object"
         },
-        Demographics: {
+        Demographic: {
           type: "object",
           properties: {
             userId: {
@@ -271,7 +271,7 @@ const swaggerOptions = {
             },
             profilePicture : {
               type: "string",
-              format: "base64",
+              format: "binary",
               description: "Base64 encoded profile picture (max size: 1MB)",
             },
             profilePictureType: {
@@ -279,15 +279,6 @@ const swaggerOptions = {
               enum: ["JPG", "JPEG"],
               description: "Type of the profile picture",
             },
-            userDetails: {
-              type: "object",
-              properties: {
-                userId: {
-                  type: "string",
-                  description: "User ID"
-                }
-              }
-            }
           },
           required: ["userId", "dateOfBirth", "gender", "bloodGroup", "height", "weight", "address", "maritalStatus", "occupation"],
           type: "object"

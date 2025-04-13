@@ -20,7 +20,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "*",
+    origin: [process.env.FRONTEND_URL,process.env.BACKEND_URL,"http://localhost:8080"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization", "x-auth-token"],
     exposedHeaders: ["x-auth-token"],
